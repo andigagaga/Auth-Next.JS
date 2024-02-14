@@ -1,0 +1,153 @@
+import { AuthContext } from '@/contexts/AuthContext'
+import { PlusIcon } from '@heroicons/react/outline'
+import React, { useContext, useState } from 'react'
+
+export default function FormAboutPage() {
+
+  const {userProfile} = useContext(AuthContext);
+  const [formData, setFormData] = useState({
+    name: '',
+    birthday: '',
+    height: 0,
+    weight: 0
+  })
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const {name, value} = event.target;
+    setFormData({...formData, [name]: value});
+  }
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const {name, birthday, height, weight} = formData;
+    console.log("data", name, birthday, height, weight)
+    userProfile(name, birthday, height, weight);
+  }
+
+  return (
+    <div className="flex justify-center items-center min-h-screen" style={{ backgroundColor: "rgba(14, 25, 31, 1)" }}>
+      <div className="w-full max-w-md px-6">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-white text-2xl font-bold">About</h1>
+          <button style={{ color: "rgba(148, 120, 62, 1)" }} onClick={handleSubmit}>
+            Save & Update
+          </button>
+        </div>
+        <div className="flex items-center mb-6">
+          <div
+            className="w-14 h-14 rounded-2xl p-1 flex justify-center items-center"
+            style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+          >
+            <PlusIcon className="w-8 h-8 text-white" />
+          </div>
+          <p className="ml-3 text-white">Add Image</p>
+        </div>
+        <div className="mt-10">
+          <div className="flex items-center mb-4">
+            <p
+              className="font-medium text-xs text-white mr-2s w-40"
+              style={{ color: "rgba(255, 255, 255, 0.33)" }}
+            >
+              Display name:
+            </p>
+            <input
+              type="text"
+              placeholder="Enter name"
+              className="input input-bordered w-full text-right pr-10"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex items-center mb-4">
+            <p
+              className="font-medium text-xs text-white mr-2s w-40"
+              style={{ color: "rgba(255, 255, 255, 0.33)" }}
+            >
+              Gender:
+            </p>
+            <select
+              className="input input-bordered w-full text-right"
+              style={{ color: "rgba(255, 255, 255, 0.33)" }}
+            >
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div className="flex items-center mb-4">
+            <p
+              className="font-medium text-xs text-white mr-2s w-40"
+              style={{ color: "rgba(255, 255, 255, 0.33)" }}
+            >
+              Birthday:
+            </p>
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input input-bordered w-full text-right pr-10"
+              value={formData.birthday}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex items-center mb-4">
+            <p
+              className="font-medium text-xs text-white mr-2s w-40"
+              style={{ color: "rgba(255, 255, 255, 0.33)" }}
+            >
+              Horoscope:
+            </p>
+            <input
+              type="text"
+              placeholder="--"
+              className="input input-bordered w-full text-right pr-10"
+            />
+          </div>
+          <div className="flex items-center mb-4">
+            <p
+              className="font-medium text-xs text-white mr-2s w-40"
+              style={{ color: "rgba(255, 255, 255, 0.33)" }}
+            >
+              Zodiac:
+            </p>
+            <input
+              type="text"
+              placeholder="--"
+              className="input input-bordered w-full text-right pr-10"
+            />
+          </div>
+          <div className="flex items-center mb-4">
+            <p
+              className="font-medium text-xs text-white mr-2s w-40"
+              style={{ color: "rgba(255, 255, 255, 0.33)" }}
+            >
+              Height:
+            </p>
+            <input
+              type="text"
+              placeholder="Add height"
+              className="input input-bordered w-full text-right pr-10"
+              value={formData.height}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex items-center mb-4">
+            <p
+              className="font-medium text-xs text-white mr-2s w-40"
+              style={{ color: "rgba(255, 255, 255, 0.33)" }}
+            >
+              Weight:
+            </p>
+            <input
+              type="text"
+              placeholder="Add weight"
+              className="input input-bordered w-full text-right pr-10"
+              value={formData.weight}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+"x-access-token": `${token}`,
