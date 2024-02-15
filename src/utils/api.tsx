@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface LoginData {
   email?: string;
@@ -17,23 +18,22 @@ interface DataProfile {
   birthday?: string;
   height?: number;
   weight?: number;
-  interests? : string[];
+  interests?: string[];
 }
 
-export const login = async (userData: LoginData): Promise<string | null> => {
+export const login = async (userData: LoginData) => {
   try {
     const response = await axios.post(
       "https://techtest.youapp.ai/api/login",
       userData
     );
-    console.log("ini data login", response);
 
-    // Simpan token di lokal storage
+    // Simpan token di local storage
     localStorage.setItem("token", response.data.access_token);
-    return response.data?.access_token;
-  } catch (error) {
-    console.log("login error", error);
-    return null;
+
+    return response.data.access_token;
+  } catch (error:any) {
+      console.log("no response received", error)
   }
 };
 
@@ -45,10 +45,18 @@ export const register = async (
       "https://techtest.youapp.ai/api/register",
       userData
     );
-    return response.data.message === "User has been created successfully";
+
+    return response;
   } catch (error) {
     console.log("register error", error);
+    throw error;
   }
+};
+
+export const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("userData");
+  return true;
 };
 
 export const createProfile = async (
@@ -72,18 +80,25 @@ export const createProfile = async (
   }
 };
 
-export const updateProfile = async(interests: string[] | undefined, token: string): Promise<any> => {
+export const updateProfile = async (
+  interests: string[] | undefined,
+  token: string
+): Promise<any> => {
   try {
-    const response = await axios.put("https://techtest.youapp.ai/api/updateProfile", {interests}, {
-      headers: {
-        "x-access-token": `${token}`,
+    const response = await axios.put(
+      "https://techtest.youapp.ai/api/updateProfile",
+      { interests },
+      {
+        headers: {
+          "x-access-token": `${token}`,
+        },
       }
-    })
-    console.log("data put", response.data)
+    );
+    console.log("data put", response.data);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 export const getProfile = async (token?: string | null): Promise<any> => {
   try {

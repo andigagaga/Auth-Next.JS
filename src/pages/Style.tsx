@@ -1,64 +1,83 @@
 "use client"
-import { AuthContext } from "@/contexts/AuthContext";
-import { createProfile } from "@/utils/api";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { PencilIcon } from "@heroicons/react/outline";
+import React, { useState } from "react";
+import FormAboutPage from "./About";
 
-export default function Style({ onProfileSaved }: any) {
-  const { userData } = useContext(AuthContext);
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [birthday, setBirthday] = useState("");
-  const [height, setHeight] = useState("");
-  const [weight, setWeight] = useState("");
-  const [error, setError] = useState(null);
+export default function Style() {
+  const [showForm, setShowForm] = useState(false);
 
-  const handleCreateProfile = async () => {
-    try {
-      const userProfile = {
-        name: name,
-        birthday: birthday,
-        height: parseInt(height),
-        weight: parseInt(weight),
-      };
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("Token not found");
-  
-      await createProfile(userProfile, token);
-      onProfileSaved(userProfile);
-      router.push("/profile");
-    } catch (error) {
-      console.error("Error creating profile:", error);
-    }
+  const handleClick = () => {
+    setShowForm(!showForm);
   };
 
   return (
-    <div
-      className="flex justify-center items-center flex-col h-96"
-      style={{ backgroundColor: "rgba(13, 29, 35, 1)" }}
-    >
-      <div className="text-left w-full max-w-xs">
-        <h1 className="font-bold text-2xl text-white ml-5">Login</h1>{" "}
+    <div className="bg-slate-900 h-screen py-2">
+      <div
+        className="bg-slate-800 h-48 rounded-lg mx-2 p-3"
+        style={{
+          backgroundColor: "rgba(22, 35, 41, 1)",
+          backgroundImage:
+            "url('https://e1.pxfuel.com/desktop-wallpaper/773/256/desktop-wallpaper-backgrounds-keren-background-keren.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <p>hello</p>
       </div>
-      <div className="h-8" />
-      <input
-        type="text"
-        placeholder="Enter Username/Email"
-        className="input input-bordered w-full max-w-xs"
-      />
-      <div className="h-3" />
-      <input
-        type="password"
-        placeholder="Enter Password"
-        className="input input-bordered w-full max-w-xs"
-      />
-      <div className="h-8" />
-      <button className="btn btn-info w-full max-w-xs text-white">Login</button>
-      <div className="h-12" />
-      <h4>
-        No account?{" "}
-        <span style={{ color: "rgba(148, 120, 62, 1)" }}>Register here</span>
-      </h4>
+      <div className="bg-slate-800 h-56 rounded-lg mx-2 my-8 p-3 relative mt-5">
+        <div>
+          <p>About</p>
+          <button>
+            <PencilIcon className="absolute top-0 right-0 w-6 h-6 text-gray-500 mr-2 mt-2" />
+          </button>
+        </div>
+        {/* <div className="mt-5">
+          <p
+            className="font-medium text-sm mt-2 w-64"
+            style={{ color: "rgba(255, 255, 255, 0.52)" }}
+          >
+            Birthday:{" "}
+            <span className="text-white">28 / 08 / 1995 (Age 28)</span>
+          </p>
+          <p
+            className="font-medium text-sm mt-2 w-64"
+            style={{ color: "rgba(255, 255, 255, 0.52)" }}
+          >
+            Birthday:{" "}
+            <span className="text-white">28 / 08 / 1995 (Age 28)</span>
+          </p>
+          <p
+            className="font-medium text-sm mt-2 w-64"
+            style={{ color: "rgba(255, 255, 255, 0.52)" }}
+          >
+            Birthday:{" "}
+            <span className="text-white">28 / 08 / 1995 (Age 28)</span>
+          </p>
+          <p
+            className="font-medium text-sm mt-2 w-64"
+            style={{ color: "rgba(255, 255, 255, 0.52)" }}
+          >
+            Birthday:{" "}
+            <span className="text-white">28 / 08 / 1995 (Age 28)</span>
+          </p>
+          <p
+            className="font-medium text-sm mt-2 w-64"
+            style={{ color: "rgba(255, 255, 255, 0.52)" }}
+          >
+            Birthday:{" "}
+            <span className="text-white">28 / 08 / 1995 (Age 28)</span>
+          </p>
+        </div> */}
+      </div>
+      <div className="bg-slate-800 h-28 rounded-lg mx-2 p-3">
+        <div>
+          <p>Interest</p>
+          <PencilIcon className="absolute top-0 right-0 w-6 h-6 text-gray-500 mr-2 mt-2" />
+        </div>
+        <div>
+          <p>Add in your interest to find a better match</p>
+        </div>
+      </div>
     </div>
   );
 }

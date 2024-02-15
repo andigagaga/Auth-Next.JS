@@ -1,31 +1,35 @@
-"use client"
-import { useContext, useState } from 'react';
-import { AuthContext } from '@/contexts/AuthContext';
-import { login } from '@/utils/api';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useContext, useState } from "react";
+import { AuthContext } from "@/contexts/AuthContext";
+import { login } from "@/utils/api";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const { updateUserData } = useContext(AuthContext);
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null); 
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async () => {
     try {
       const userData = inputValue.includes("@")
-        ? { email: inputValue, password: password, username: "" }
-        : { username: inputValue, password: password, email: "" };
-      const token:string|null = await login(userData);
-      console.log("Login Successfully", token);
-      const loToken = localStorage.getItem("token")
-      if(token != null && token === loToken){
-        updateUserData(inputValue,password);
-        router.push('/profile');
+      ? { email: inputValue, password: password, username: "" }
+      : { username: inputValue, password: password, email: "" };
+      const token: string | null = await login(userData);
+      const loToken = localStorage.getItem("token");
+      if (token != null && token === loToken) {
+        const data = JSON.stringify(userData);
+        localStorage.setItem("userData", data);
+        updateUserData(inputValue, password);
+        router.push("/profile");
+      } else {
+        setError("Login failed");
+        setTimeout(() => setError(null), 2000);
       }
+      
     } catch (error) {
-      console.log("Login error", error);
-      setError("Failed to login. Please check your credentials."); 
+      setError("Failed to login");
     }
   };
 
@@ -38,6 +42,7 @@ const LoginPage = () => {
         <h1 className="font-bold text-2xl text-white ml-5">Login</h1>{" "}
       </div>
       <div className="h-8" />
+      <p className="mb-2 text-red-700">{error}</p>
       <input
         type="text"
         placeholder="Enter Username/Email"
@@ -54,11 +59,18 @@ const LoginPage = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div className="h-8" />
-      <button className="btn btn-info w-full max-w-xs text-white" onClick={handleLogin}>Login</button>
+      <button
+        className="btn btn-info w-full max-w-xs text-white"
+        onClick={handleLogin}
+      >
+        Login
+      </button>
       <div className="h-12" />
       <h4>
         No account?{" "}
-        <span style={{ color: "rgba(148, 120, 62, 1)" }}>Register here</span>
+        <button onClick={() => router.push("/register")}>
+          <span style={{ color: "rgba(148, 120, 62, 1)" }}>Register here</span>
+        </button>
       </h4>
     </div>
   );

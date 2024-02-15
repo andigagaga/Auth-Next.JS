@@ -1,8 +1,8 @@
-import React from 'react'
-import Pros from '@/pages/Pros'
+// import React from 'react'
+// import Pros from '@/pages/Pros'
 
-export default function page() {
-  return (
-    <Pros/>
-  )
-}
+// export default function page() {
+//   return (
+//     <Pros/>
+//   )
+// }
