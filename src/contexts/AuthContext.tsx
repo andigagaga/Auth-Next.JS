@@ -1,5 +1,6 @@
 import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { register } from "@/utils/api";
+import { redirect } from "next/navigation";
 
 type PropsT = {
   children: ReactNode;
@@ -24,7 +25,7 @@ interface AuthContextType {
     email: string,
     username: string,
     password: string
-  ) => Promise<boolean>;
+  ) => void;
   updateUserDetails: (
     name: string,
     birthday: string,
@@ -49,7 +50,7 @@ const defaultUserData: UserData = {
 export const AuthContext = createContext<AuthContextType>({
   userData: defaultUserData,
   updateUserData: () => {},
-  registerUser: async () => false,
+  registerUser: async () => {},
   updateUserDetails: () => {},
 });
 
@@ -101,17 +102,17 @@ export const AuthProvider: React.FC<PropsT> = ({ children }) => {
   ) => {
     try {
       const success = await register({ email, username, password });
-      if (success) {
-        setUserData((prevUserData) => ({ ...prevUserData, email, username }));
-        return true;
+      if (!success.ok) {
+        console.log(success)
       } else {
-        return false;
+        redirect("/login");
       }
     } catch (error) {
       console.error("Registration error:", error);
       return false;
     }
   };
+  
 
   return (
     <AuthContext.Provider

@@ -1,10 +1,12 @@
-"use client"
+"use client";
 import { AuthContext } from "@/contexts/AuthContext";
 import { getProfile } from "@/utils/api";
 import { PencilIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 import FormAboutPage from "./About";
+import calculateAge from "@/utils/calculate";
+import ButtonNavigation from "@/components/ButtonNavigation";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -12,6 +14,7 @@ export default function ProfilePage() {
   const aboutRef = useRef<HTMLDivElement>(null);
   const { userData } = useContext(AuthContext);
   const [profileData, setProfileData] = useState<any>(null);
+  const [userAge, setUserAge] = useState<number | string>("")
 
   const token: string | null = localStorage.getItem("token");
 
@@ -19,11 +22,18 @@ export default function ProfilePage() {
     getProfile(token)
       .then((profileData) => {
         setProfileData(profileData.data);
+
+        const birtday = profileData.data.birthday;
+        console.log("lahir", birtday)
+
+        const age = calculateAge(birtday);
+        setUserAge(age)
       })
       .catch((error) => {
         console.log(error, " terjadi error saat mendapatkan data profile");
       });
-  }, []);
+  }, [token]);
+  console.log("umur", userAge)
 
   const toggleEditAbout = () => {
     setShowEditAbout((prev) => !prev);
@@ -34,7 +44,10 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-900 text-white py-10">
-      <h3 className="text-center">{userData.email || userData.username}</h3>
+      {/* <h3 className="text-center">{userData.email || userData.username}</h3>   */}
+      <div className="w-full mb-12">
+        <ButtonNavigation email={userData.email || userData.username}/>
+      </div>
       <div className="relative mt-5 w-[359px] h-48 mx-auto rounded-2xl overflow-hidden">
         <img
           src="https://e1.pxfuel.com/desktop-wallpaper/773/256/desktop-wallpaper-backgrounds-keren-background-keren.jpg"
@@ -47,7 +60,7 @@ export default function ProfilePage() {
             onClick={() => router.push("/edit-profile")}
           />
           <div className="px-4 pb-2">
-            <h1 className="font-bold text-lg">{profileData?.name}, 20</h1>
+            <h1 className="font-bold text-lg">{profileData?.name}, {userAge}</h1>
             <h3>Male</h3>
           </div>
         </div>
@@ -57,29 +70,48 @@ export default function ProfilePage() {
           <FormAboutPage onProfileSaved={() => setShowEditAbout(false)} />
         ) : (
           <>
-            <button
-              className="absolute top-2 right-2"
-              onClick={toggleEditAbout}
-            >
-              <PencilIcon className="w-6 h-6 text-gray-500 absolute top-2 right-2 cursor-pointer" />
-            </button>
             <div>
-              <p className="font-bold text-sm">About</p>
+              <div className="flex items-center justify-between">
+                <p className="font-bold text-sm">About</p>
+                <button onClick={toggleEditAbout}>
+                  <PencilIcon className="w-6 h-6 text-gray-500 top-2 right-2 cursor-pointer" />
+                </button>
+              </div>
               <div className="mt-2">
-                <p className="font-medium text-sm mt-2 w-64" style={{ color: "rgba(255, 255, 255, 0.52)" }}>
-                  Birthday: <span className="text-white">{profileData?.birthday}</span>
+                <p
+                  className="font-medium text-sm mt-2 w-64"
+                  style={{ color: "rgba(255, 255, 255, 0.52)" }}
+                >
+                  Birthday:{" "}
+                  <span className="text-white">{profileData?.birthday}</span>
                 </p>
-                <p className="font-medium text-sm mt-2 w-64" style={{ color: "rgba(255, 255, 255, 0.52)" }}>
-                  Horoscope: <span className="text-white">{profileData?.horoscope}</span>
+                <p
+                  className="font-medium text-sm mt-2 w-64"
+                  style={{ color: "rgba(255, 255, 255, 0.52)" }}
+                >
+                  Horoscope:{" "}
+                  <span className="text-white">{profileData?.horoscope}</span>
                 </p>
-                <p className="font-medium text-sm mt-2 w-64" style={{ color: "rgba(255, 255, 255, 0.52)" }}>
-                  Zodiac: <span className="text-white">{profileData?.zodiac}</span>
+                <p
+                  className="font-medium text-sm mt-2 w-64"
+                  style={{ color: "rgba(255, 255, 255, 0.52)" }}
+                >
+                  Zodiac:{" "}
+                  <span className="text-white">{profileData?.zodiac}</span>
                 </p>
-                <p className="font-medium text-sm mt-2 w-64" style={{ color: "rgba(255, 255, 255, 0.52)" }}>
-                  Height: <span className="text-white">{profileData?.height} cm</span>
+                <p
+                  className="font-medium text-sm mt-2 w-64"
+                  style={{ color: "rgba(255, 255, 255, 0.52)" }}
+                >
+                  Height:{" "}
+                  <span className="text-white">{profileData?.height} cm</span>
                 </p>
-                <p className="font-medium text-sm mt-2 w-64" style={{ color: "rgba(255, 255, 255, 0.52)" }}>
-                  Weight: <span className="text-white">{profileData?.weight} kg</span>
+                <p
+                  className="font-medium text-sm mt-2 w-64"
+                  style={{ color: "rgba(255, 255, 255, 0.52)" }}
+                >
+                  Weight:{" "}
+                  <span className="text-white">{profileData?.weight} kg</span>
                 </p>
               </div>
             </div>
@@ -93,9 +125,14 @@ export default function ProfilePage() {
             <PencilIcon className="w-6 h-6 text-gray-500 cursor-pointer" />
           </button>
         </div>
-        <div className="mt-2 grid grid-cols-4 gap-4">
+        <div className="mt-2 grid grid-cols-3 gap-4">
           {profileData?.interests?.map((interest: string, index: number) => (
-            <p key={index} className="text-white w-[82px] h-[33px] rounded-full flex justify-center items-center bg-opacity-10 bg-white">{interest}</p>
+            <p
+              key={index}
+              className="text-white rounded-full flex justify-center items-center bg-opacity-10 bg-white"
+            >
+              {interest}
+            </p>
           ))}
         </div>
       </div>

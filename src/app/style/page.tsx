@@ -1,8 +1,8 @@
-import Style from '@/pages/Style'
+import ButtonNavigation from '@/components/ButtonNavigation'
 import React from 'react'
 
 export default function page() {
   return (
-    <Style/>
+    <ButtonNavigation/>
   )
 }

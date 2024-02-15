@@ -20,6 +20,8 @@ export default function FormAboutPage({ onProfileSaved }: any) {
         birthday: birthday,
         height: parseInt(height),
         weight: parseInt(weight),
+        interests:[]
+
       };
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token not found");

@@ -1,4 +1,5 @@
 "use client";
+import ButtonNavigation from "@/components/ButtonNavigation";
 import { updateProfile } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -25,7 +26,9 @@ export default function InterestPage() {
     <div className="flex justify-center items-center min-h-screen bg-gray-900">
       <div className="w-full max-w-md px-6">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-white text-2xl font-bold">About</h1>
+        <div className="w-full mb-10">
+        <ButtonNavigation/>
+      </div>
           <button
             style={{
               color: "rgba(171, 255, 253, 1)",
